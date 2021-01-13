@@ -1,0 +1,23 @@
+<h3>REGISTRATION</h3>
+
+<form action='/user/register' method='POST' autocomplete='off'>
+    <input type="hidden" name="_id" >
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Name</label>
+            <input type="text" class="form-control" name="name" placeholder="Name" value="{{name}}" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>E-mail</label>
+            <input type="text" class="form-control" name="email" placeholder="Email"  required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-info">Register</button>
+        <a class="btn btn-secondary" href="/">Back</a>
+    </div>
+</form>

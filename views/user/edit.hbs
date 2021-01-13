@@ -1,0 +1,23 @@
+<h3>Edit User</h3>
+
+<form action='/user' method='POST' autocomplete='off'>
+    <input type="hidden" name="_id" value="{{user.id}}">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>Name</label>
+            <input type="text" class="form-control" name="name" placeholder="Name" value="{{user.name}}" required>
+        </div>
+        <div class="form-group col-md-6">
+            <label>E-mail</label>
+            <input type="text" class="form-control" name="email" placeholder="Email" value="{{user.email}}" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="text" class="form-control" name="password" placeholder="Password" value="{{user.password}}" required>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-info">Submit</button>
+        <a class="btn btn-secondary" href="/user/list">View All</a>
+    </div>
+</form>
