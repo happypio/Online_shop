@@ -3,6 +3,8 @@ var router = express.Router();
 const mongoose = require('mongoose');
 const { use } = require('./productController');
 const User = mongoose.model('User');
+var bcrypt = require('bcrypt');
+var assert = require('assert');
 
 router.get('/', (req, res) => {
     res.redirect('/user/list')
@@ -31,12 +33,26 @@ router.post('/login', (req, res) => {
 function checklogin(req, res) {
     var name = req.body.name
     var password = req.body.password
-    User.find({name: name, password: password}, (err, doc) => {
+    User.find({name: name}, (err, doc) => {
         if (!err) {
-            if (doc.length > 0) {
-                res.render('user/login', {res: "Succes!"})
-            } else {
-                res.render('user/login', {res: "Login or Password incorrect!"})
+            /* There should be exactly one match as the names are unique */
+            if (doc.length == 1) { 
+                bcrypt.compare(password, doc[0].password).then((result) => {
+                    if( result ){
+                        res.render('user/login', {res: "Success!"});
+                    } 
+                    else {
+                        res.render('user/login', {res: "Password incorrect!"});
+                    }
+                  })
+                  .catch((err) => console.error(err))
+            } 
+            else if (doc.length == 0){
+                res.render('user/login', {res: "Login incorrect!"})
+            }
+            /* This should never happen, but added for clarity: */
+            else {
+                res.status(500).send({error: "Error during login"});
             }
         }
         else {
