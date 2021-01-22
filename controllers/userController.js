@@ -45,25 +45,43 @@ function checklogin(req, res) {
     })
 }
 
+/* Adding new user to DB ( register )*/
 function insertRecord(req, res) {
     var user = new User();
     var name = req.body.name;
+    var email = req.body.email;
     User.find({name: name}, (err, doc) => {
         if (!err) {
+            /* Checking only name existance, but what about checking email existence? */
             if (doc.length > 0) {
-                res.render('user/register', {name: "This name already exists!"})}
+                res.render('user/register', {name: "This name already exists!"})
+            }
             else {
-                user.name = name;
-                user.password = req.body.password;
-                user.email = req.body.email;
-                user.user = 'normal';
-                user.save((err, doc) => {
+                User.find({email: email}, (err, doc) => {
                     if (!err) {
-                        res.redirect('../');
-                    } else {
-                        console.log('Error during insert: ' + err);
+                        if (doc.length > 0) {
+                            res.render('user/register', {email: "Email already in use!"});
+                        }
+                        else {
+                            user.name = name;
+                            user.password = req.body.password;
+                            user.email = req.body.email;
+                            user.user = 'normal';
+                            user.isAdmin = false;
+                            user.save((err, doc) => {
+                                if (!err) {
+                                    res.redirect('../');
+                                } else {
+                                    console.log('Error during insert: ' + err);
+                                }
+                            })
+                        }
+                    }
+                    else {
+                        console.log("error during register: " + err);
                     }
                 })
+                
             }
             
         }
@@ -73,6 +91,7 @@ function insertRecord(req, res) {
     })
 }
 
+/* Updating existing user data */
 function updateRecord(req, res) {
     User.findOneAndUpdate({_id: req.body._id}, req.body, {new: true}, (err, dc) => {
         if(!err) {
@@ -83,6 +102,7 @@ function updateRecord(req, res) {
     })
 }
 
+/* List existing users */
 router.get('/list', (req, res) => {
     User.find((err, items) => {
         if (!err) {
@@ -95,6 +115,7 @@ router.get('/list', (req, res) => {
     })
 })
 
+/* Show certain user's data (admin only!) */
 router.get('/:id', (req, res) => {
     User.findById(req.params.id, (err, p) => {
         if (!err) {
@@ -106,6 +127,7 @@ router.get('/:id', (req, res) => {
     })
 })
 
+/* Delete user by id */
 router.get('/delete/:id', (req, res) => {
     User.findByIdAndRemove(req.params.id, (err, p) => {
         if(!err) {
