@@ -6,7 +6,11 @@
         <a class="btn btn-secondary" href="/user/list">View Users</a>
 </div>
 <div class="form-group">
-        <a class="btn btn-primary btn-sm" href="/user/login">Login</a>
+        {{#if session._id}}
+                <a class="btn btn-primary btn-sm" href="/user/logout">Log out</a>
+        {{else}}
+                <a class="btn btn-primary btn-sm" href="/user/login">Log in</a>
+        {{/if}}
         <a class="btn btn-primary btn-sm" href="/user/register">Register</a>
 </div>
 

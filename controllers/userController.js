@@ -5,6 +5,7 @@ const { use } = require('./productController');
 const User = mongoose.model('User');
 var bcrypt = require('bcrypt');
 var assert = require('assert');
+var session = require('express-session');
 
 router.get('/', (req, res) => {
     res.redirect('/user/list')
@@ -18,7 +19,7 @@ router.get('/register', (req,res) => {
     res.render('user/register');
 })
 
-router.get('/login', (req,res) => {
+router.get('/login', redirectIndex, (req,res) => {
     res.render('user/login');
 })
 
@@ -30,6 +31,12 @@ router.post('/login', (req, res) => {
     checklogin(req, res)
 })
 
+router.get('/logout', redirectLogin, (req, res) => {
+    res.render('user/logout')
+    destroySession(req, res)
+})
+
+
 function checklogin(req, res) {
     var name = req.body.name
     var password = req.body.password
@@ -40,6 +47,7 @@ function checklogin(req, res) {
                 bcrypt.compare(password, doc[0].password).then((result) => {
                     if( result ){
                         res.render('user/login', {res: "Success!"});
+                        req.session._id = doc[0]._id;
                     } 
                     else {
                         res.render('user/login', {res: "Password incorrect!"});
@@ -60,6 +68,30 @@ function checklogin(req, res) {
         }
     })
 }
+
+/* Called when anonymous client wants to access a page, that is 
+ * available only for authenticated users */ 
+function redirectLogin (req, res, next){
+    if (!req.session._id){
+        res.redirect('/user/login')
+    }
+    else {
+        next()
+    }
+}
+
+/* Called when authenticated user wants to log in, as we don't
+ * want him to login more than once */
+function redirectIndex (req, res, next){
+    console.log(req.session._id)
+    if (req.session._id){
+        res.redirect('/..')
+    }
+    else {
+        next()
+    }
+}
+
 
 /* Adding new user to DB ( register )*/
 function insertRecord(req, res) {
@@ -115,6 +147,15 @@ function updateRecord(req, res) {
         } else {
             console.log('Error during update: ' + err);
         }
+    })
+}
+
+function destroySession(req,res) {
+    req.session.destroy(err => {
+        if (err){
+            return res.redirect("/")
+        }
+        res.clearCookie('sesID')
     })
 }
 
