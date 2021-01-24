@@ -8,9 +8,20 @@ var assert = require('assert');
 var session = require('express-session');
 
 router.get('/', (req, res) => {
-    res.redirect('/user/list')
+    res.redirect('user/list')
 })
-
+ 
+router.get('/list', (req, res) => {
+    User.find((err, items) => {
+        if (!err) {
+            res.render('user/list', {
+                list: items,
+            })
+        } else {
+            console.log('Error in retrieval: ' + err);
+        }
+    })
+})
 router.post('/', (req, res) => {
     updateRecord(req, res)
 })

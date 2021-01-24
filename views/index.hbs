@@ -2,8 +2,10 @@
 <div class="form-group">
         <label>Products: </label>
         <a class="btn btn-secondary" href="/product/list">View Products</a>
-        <label>Users: </label>
-        <a class="btn btn-secondary" href="/user/list">View Users</a>
+        {{#if session._id}}
+                <label>Users: </label>
+                <a class="btn btn-secondary" href="/user/list">View Users</a>
+        {{/if}}
 </div>
 <div class="form-group">
         {{#if session._id}}
