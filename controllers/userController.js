@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     res.redirect('user/list')
 })
  
-router.get('/list', (req, res) => {
+router.get('/list', redirectLogin, (req, res) => {
     User.find((err, items) => {
         if (!err) {
             res.render('user/list', {
@@ -47,6 +47,10 @@ router.get('/logout', redirectLogin, (req, res) => {
     destroySession(req, res)
 })
 
+router.get('/login_success', (req, res) => {
+    res.redirect('/user/login');
+})
+
 
 function checklogin(req, res) {
     var name = req.body.name
@@ -57,7 +61,7 @@ function checklogin(req, res) {
             if (doc.length == 1) { 
                 bcrypt.compare(password, doc[0].password).then((result) => {
                     if( result ){
-                        res.render('user/login', {res: "Success!"});
+                        res.render('user/login_success', {name: name});
                         req.session._id = doc[0]._id;
                     } 
                     else {
@@ -94,7 +98,6 @@ function redirectLogin (req, res, next){
 /* Called when authenticated user wants to log in, as we don't
  * want him to login more than once */
 function redirectIndex (req, res, next){
-    console.log(req.session._id)
     if (req.session._id){
         res.redirect('/..')
     }
