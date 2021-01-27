@@ -13,7 +13,11 @@
         {{else}}
                 <a class="btn btn-primary btn-sm" href="/user/login">Log in</a>
         {{/if}}
+        {{#if session._id}}
+        <a class="btn btn-primary btn-sm" href="/user/register">Add new user</a>
+        {{else}}
         <a class="btn btn-primary btn-sm" href="/user/register">Register</a>
+        {{/if}}
 </div>
 
         

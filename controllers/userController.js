@@ -49,7 +49,7 @@ router.get('/logout', redirectLogin, (req, res) => {
 
 router.get('/login_success', (req, res) => {
     res.redirect('/user/login');
-})
+})  
 
 
 function checklogin(req, res) {
@@ -62,7 +62,9 @@ function checklogin(req, res) {
                 bcrypt.compare(password, doc[0].password).then((result) => {
                     if( result ){
                         res.render('user/login_success', {name: name});
+                        /* These two lines below are crucial for the authentication process */
                         req.session._id = doc[0]._id;
+                        req.session.isAdmin = doc[0].isAdmin;
                     } 
                     else {
                         res.render('user/login', {res: "Password incorrect!"});
@@ -128,7 +130,6 @@ function insertRecord(req, res) {
                             user.name = name;
                             user.password = req.body.password;
                             user.email = req.body.email;
-                            user.user = 'normal';
                             user.isAdmin = false;
                             user.save((err, doc) => {
                                 if (!err) {

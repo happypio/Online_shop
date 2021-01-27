@@ -1,4 +1,9 @@
-<h3><a class="btn btn-secondary" href="/product">Create New</a> <a class="btn btn-secondary" href="/">Back</a> Products List</h3>
+<h3>
+{{#if session.isAdmin}}
+    <a class="btn btn-secondary" href="/product">Create New</a>
+{{/if}}
+<a class="btn btn-secondary" href="/">Back</a> Products List
+</h3>
 <form action='/product/search' method='POST' autocomplete='off'>
 <div class="form-row">
     <div class="form-group col-md-6">

@@ -6,6 +6,7 @@ const Product = mongoose.model('Product');
 var fs = require('fs');
 var path = require('path');
 var multer = require('multer');
+const { runInNewContext } = require('vm');
  
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -18,11 +19,20 @@ var storage = multer.diskStorage({
  
 var upload = multer({ storage: storage });
 
-router.get('/', (req, res) => {
+router.get('/', redirect_isAdmin,(req, res) => {
     res.render('product/addOrEdit', {
         viewTitle: 'Insert Product'
     })
 })
+
+function redirect_isAdmin(req, res, next) {
+    if (!req.session.isAdmin || req.session.isAdmin == false){
+        res.redirect('/')
+    }
+    else{
+        next()
+    }
+}
 
 router.post('/search', (req, res) => {
     if (req.body.search == '') {
