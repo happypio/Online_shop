@@ -13,7 +13,7 @@ const userController = require("./controllers/userController");
 const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
 
 
@@ -21,6 +21,7 @@ var app = express();
 
 app.use(bodyparser.urlencoded({extended: false}));
 app.use(bodyparser.json());
+app.use(cookieParser())
 
 app.use(session({
     name: 'SesID',

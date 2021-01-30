@@ -1,0 +1,14 @@
+<form action='/product/add_to_cart/thanks' method='POST' autocomplete='off'>
+<h2>
+    How many items of {{product.name}}?
+</h2>
+<div class="form-row">
+    <div class="form-group col-md-6">
+    <input type="number" class="form-control" name="how_many" placeholder="Number" min="1" max="100" required>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-info">Order!</button>
+        <a class="btn btn-secondary" href="/product/list">Back</a>
+    </div>
+</div>
+</form>

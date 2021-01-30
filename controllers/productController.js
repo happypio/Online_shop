@@ -159,7 +159,6 @@ router.get('/:id', (req, res) => {
                 product: p
             })
         }
-        //console.log(p);
     })
 })
 
@@ -170,6 +169,32 @@ router.get('/delete/:id', (req, res) => {
         } else {
             console.log("Error in deletion: " + err);
         }
+    })
+})
+
+router.get('/add_to_cart/:id', (req, res) => {
+    Product.findById(req.params.id, (err, p) => {
+        if (!err) {
+            res.cookie('product', p, {
+                maxAge: 1000 * 60 * 15, 
+                httpOnly: true
+            })
+            res.render('product/productAddToCart', {
+                product: p
+            })
+        }
+        else {
+            console.log("Error: " + err);
+        }
+    })
+})
+
+router.post('/add_to_cart/thanks', (req, res) => {
+    var n = req.body.how_many;
+    var product = req.cookies.product
+    res.render('product/thanks', {
+        number: n,
+        prod_name: product.name
     })
 })
 
