@@ -26,13 +26,18 @@ router.get('/', redirect_isAdmin,(req, res) => {
 })
 
 function redirect_isAdmin(req, res, next) {
-    if (!req.session.isAdmin || req.session.isAdmin == false){
+    if (!req.session.isAdmin || req.session.isAdmin == false)
         res.redirect('/')
-    }
-    else{
+    else
         next()
-    }
 }
+function redirect_Login(req, res, next) {
+    if (!req.session._id)
+        res.redirect('/user/login')
+    else
+        next()
+}
+
 
 router.post('/search', (req, res) => {
     if (req.body.search == '') {
@@ -172,7 +177,7 @@ router.get('/delete/:id', (req, res) => {
     })
 })
 
-router.get('/add_to_cart/:id', (req, res) => {
+router.get('/add_to_cart/:id', redirect_Login,(req, res) => {
     Product.findById(req.params.id, (err, p) => {
         if (!err) {
             res.cookie('product', p, {
@@ -189,7 +194,7 @@ router.get('/add_to_cart/:id', (req, res) => {
     })
 })
 
-router.post('/add_to_cart/thanks', (req, res) => {
+router.post('/add_to_cart/thanks', redirect_Login,(req, res) => {
     var n = req.body.how_many;
     var product = req.cookies.product
     res.render('product/thanks', {

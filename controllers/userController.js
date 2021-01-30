@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const { use } = require('./productController');
 const User = mongoose.model('User');
 var bcrypt = require('bcrypt');
-var assert = require('assert');
-var session = require('express-session');
+// var assert = require('assert');
+// var session = require('express-session');
 
 router.get('/', (req, res) => {
     res.redirect('user/list')
