@@ -2,6 +2,7 @@ const express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
+const Order = mongoose.model('Order');
 
 var fs = require('fs');
 var path = require('path');
@@ -124,6 +125,18 @@ function updateRecord(req, res) {
     })
 }
 
+router.get('/myorders', redirect_Login, (req, res) => {
+    Order.find({user_id: req.session._id}, (err, orders) => {
+        if (!err) {
+            res.render('product/myCart', {
+                list: orders
+            })
+        } else {
+            console.log('Error in retrieval: ' + err);
+        }
+    })
+})
+
 router.get('/list', (req, res) => {
     Product.find((err, items) => {
         if (!err) {
@@ -167,12 +180,30 @@ router.get('/:id', (req, res) => {
     })
 })
 
-router.get('/delete/:id', (req, res) => {
+router.get('/product_delete/:id', redirect_Login, (req, res) => {
     Product.findByIdAndRemove(req.params.id, (err, p) => {
         if(!err) {
             res.redirect('../list');
         } else {
             console.log("Error in deletion: " + err);
+        }
+    })
+})
+router.get('/order_delete/:id', redirect_isAdmin,(req, res) => {
+    Order.findByIdAndRemove(req.params.id, (err, p) => {
+        if(!err) {
+            res.redirect('../list');
+        } else {
+            console.log("Error in deletion: " + err);
+        }
+    })
+})
+router.get('/order_cancel/:id', redirect_Login,(req, res) => {
+    Order.findByIdAndUpdate(req.params.id, {"status": 'cancelled'},(err, order) => {
+        if(!err) {
+            res.redirect('/product/myorders');
+        } else {
+            console.log("Error in cancellation: " + err);
         }
     })
 })
@@ -195,12 +226,34 @@ router.get('/add_to_cart/:id', redirect_Login,(req, res) => {
 })
 
 router.post('/add_to_cart/thanks', redirect_Login,(req, res) => {
-    var n = req.body.how_many;
-    var product = req.cookies.product
-    res.render('product/thanks', {
-        number: n,
-        prod_name: product.name
-    })
+    addOrder(req, res);
 })
+
+function addOrder(req, res) {
+    var num = req.body.how_many;
+    var product = req.cookies.product
+    var user_id = req.session._id;
+    
+    var order = new Order();
+    order.user_id = user_id;
+    order.product_id = product._id;
+    order.product_name = product.name;
+    order.number_of_items = num;
+    order.status = 'placed';
+
+    order.save((err, doc) => {
+        if (!err) {
+            //console.log(order);
+        } else {
+            console.log('Error during order insert: ' + err);
+        }
+    })
+
+    res.render('product/thanks', {
+        number: num,
+        prod_name: order.product_name
+    })
+}
+
 
 module.exports = router

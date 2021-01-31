@@ -1,0 +1,29 @@
+<h3>
+<a class="btn btn-secondary" href="/">Back</a> My Orders
+</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Product name</th>
+            <th>Items ordered</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each list}}
+        <tr>
+            <td>{{this.product_name}}</td>
+            <td>{{this.number_of_items}}</td>
+            <td>{{this.status}}</td>
+            <td>
+                <a class="btn btn-primary btn-sm" href="/product/order_cancel/{{this.id}}"
+                onclick="return confirm('Are you sure you want to cancel this order?');">Cancel</a>
+                {{#if ../session.isAdmin}} {{! Important to use "../" ad we are inside #each }}
+                    <a class="btn btn-primary btn-sm" href="/product/order_delete/{{this.id}}"
+                    onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

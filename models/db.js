@@ -15,3 +15,4 @@ err => {
 
 require('./product.model');
 require('./user.model');
+require('./order.model');

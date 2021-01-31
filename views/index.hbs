@@ -2,9 +2,13 @@
 <div class="form-group">
         <label>Products: </label>
         <a class="btn btn-secondary" href="/product/list">View Products</a>
-        {{#if session._id}}
+        {{#if session.isAdmin}}
                 <label>Users: </label>
                 <a class="btn btn-secondary" href="/user/list">View Users</a>
+        {{/if}}
+        {{#if session._id}}
+                <label>Orders: </label>
+                <a class="btn btn-secondary" href="/product/myorders">View My Cart</a>
         {{/if}}
 </div>
 <div class="form-group">
