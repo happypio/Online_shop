@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-
-mongoose.connect('mongodb+srv://admin:<password>@cluster0.azij4.mongodb.net/<ShopDB>?retryWrites=true&w=majority', {
+var url = process.env.MONGOLAB_URI;
+mongoose.connect(url, {
     useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true
