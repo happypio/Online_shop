@@ -15,7 +15,7 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const cookieParser = require('cookie-parser');
 
-
+const port = process.env.PORT || 3000
 
 var app = express();
 
@@ -56,7 +56,7 @@ app.engine('hbs', exphbs({
 
 app.set("view engine", "hbs");
 
-app.listen(3000, () => {
+app.listen(port, () => {
     console.log('STARTED');
 });
 
