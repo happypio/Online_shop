@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 var url = process.env.MONGOLAB_URI;
+//if you want to deploy app on local host, then use:
+//var url = "mongodb://localhost:27017/shopDB";
 mongoose.connect(url, {
     useFindAndModify: false,
     useNewUrlParser: true,

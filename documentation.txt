@@ -1,0 +1,14 @@
+Online shop application
+Authors: Piotr Piesiak, Antoni Pokusiński
+
+The application is based on a simple online store idea, where you can post an advertisement of your product, give all required informations (including contact details) and wait for buyer.
+There are 3 types of users:
+	1 - not logged in user - he can only browse products and their details
+	2 - logged in user - this user can browse and buy products by adding them to cart and pressubg the "oreder button"
+	3 - admin user - he has all the permissions. Admin can view active carts, edit them and delete. He can also view all users and product, and edit their data.
+	
+You can launch application on your localhost by simply downloading this repositorium on your computer. After you write in your command shell (on Ubuntu) npm install remember to change host of database - just comment 2-nd line and uncomment 4-th in /models/db.js file. Assuming that you have installed MongoDB, just type node app.js and have fun in our store!
+
+You can also check application on link https://pioantshop.herokuapp.com/ . User data:
+"normal user" -> login: user ; password: 12345 
+"admin user" -> login: admin ; password 12345 
