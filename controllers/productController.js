@@ -128,8 +128,25 @@ function updateRecord(req, res) {
 router.get('/myorders', redirect_Login, (req, res) => {
     Order.find({user_id: req.session._id}, (err, orders) => {
         if (!err) {
+            for (o = 0; o < orders.length; o++) {
+                orders[o].st = true;
+                if (orders[o].status === 'cancelled')
+                    orders[o].st = false;
+            }
             res.render('product/myCart', {
                 list: orders
+            })
+        } else {
+            console.log('Error in retrieval: ' + err);
+        }
+    })
+})
+
+router.get('/allorders', redirect_isAdmin, (req, res) => {
+    Order.find((err, items) => {
+        if (!err) {
+            res.render('product/myCart', {
+                list: items,
             })
         } else {
             console.log('Error in retrieval: ' + err);
@@ -192,12 +209,31 @@ router.get('/product_delete/:id', redirect_Login, (req, res) => {
 router.get('/order_delete/:id', redirect_isAdmin,(req, res) => {
     Order.findByIdAndRemove(req.params.id, (err, p) => {
         if(!err) {
-            res.redirect('../list');
+            res.redirect('../allorders');
         } else {
             console.log("Error in deletion: " + err);
         }
     })
 })
+router.get('/change_status/:id', redirect_isAdmin,(req, res) => {
+    Order.findById(req.params.id, (err, tmp) => {
+        if (!err) {
+            var status = 'cancelled';
+            if (tmp.status == 'cancelled')
+                status = 'placed';
+            Order.findByIdAndUpdate(req.params.id, { "status": status }, (err, order) => {
+                if (!err) {
+                    res.redirect('../allorders');
+                } else {
+                    console.log("Error in cancellation: " + err);
+                }
+            })
+        } else {
+            console.log("Error in cancellation: " + err);
+        }
+    })
+})
+
 router.get('/order_cancel/:id', redirect_Login,(req, res) => {
     Order.findByIdAndUpdate(req.params.id, {"status": 'cancelled'},(err, order) => {
         if(!err) {

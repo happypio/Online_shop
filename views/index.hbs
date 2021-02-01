@@ -7,8 +7,14 @@
                 <a class="btn btn-secondary" href="/user/list">View Users</a>
         {{/if}}
         {{#if session._id}}
+                {{#unless session.isAdmin}}
+                        <label>Orders: </label>
+                        <a class="btn btn-secondary" href="/product/myorders">View My Cart</a>
+                {{/unless}}
+        {{/if}}
+        {{#if session.isAdmin}}
                 <label>Orders: </label>
-                <a class="btn btn-secondary" href="/product/myorders">View My Cart</a>
+                <a class="btn btn-secondary" href="/product/allorders">View users' Orders</a>
         {{/if}}
 </div>
 <div class="form-group">
@@ -18,7 +24,9 @@
                 <a class="btn btn-primary btn-sm" href="/user/login">Log in</a>
         {{/if}}
         {{#if session._id}}
-        <a class="btn btn-primary btn-sm" href="/user/register">Add new user</a>
+                {{#if session.isAdmin}}
+                        <a class="btn btn-primary btn-sm" href="/user/register">Add new user</a>
+                {{/if}}
         {{else}}
         <a class="btn btn-primary btn-sm" href="/user/register">Register</a>
         {{/if}}

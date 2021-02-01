@@ -28,13 +28,19 @@
             <td>{{this.name}}</td>
             <td>{{this.mobile}}</td>
             <td>
+                {{#if ../session.isAdmin}}
                 <a class="btn btn-primary btn-sm" href="/product/{{this.id}}">Edit</a>
+                {{/if}}
+                {{#if ../session.isAdmin}}
                 <a class="btn btn-primary btn-sm" href="/product/product_delete/{{this.id}}"
                     onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
+                {{/if}}
                 <a class="btn btn-primary btn-sm" href="/product/picture/{{this.id}}">Picture</a>
                 <a class="btn btn-primary btn-sm" href="/product/show/{{this.id}}">More</a>
                 {{#if ../session._id}} {{! Important to use "../" ad we are inside #each }}
-                    <a class="btn btn-success btn-sm" href="/product/add_to_cart/{{this.id}}">Add to cart</a>
+                    {{#unless ../session.isAdmin}}
+                        <a class="btn btn-success btn-sm" href="/product/add_to_cart/{{this.id}}">Add to cart</a>
+                    {{/unless}}
                 {{/if}}
             </td>
         </tr>
